@@ -8,7 +8,7 @@ public class Server {
     private static final int PORT = 12345;
 
     private final List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
-    private final GameState gameState = new GameState(); // ✅ memória compartilhada simulada
+    private final GameState gameState = new GameState();
 
     private String ultimaJogada = null;
     private ClientHandler jogadorAtual = null;
@@ -22,12 +22,11 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Servidor Blackjack aguardando clientes...");
 
-            // Espera por dois jogadores
             while (clients.size() < 2) {
                 Socket socket = serverSocket.accept();
-                ClientHandler handler = new ClientHandler(socket, this, gameState, clients.size() + 1); // ✅ novo construtor
+                ClientHandler handler = new ClientHandler(socket, this, gameState, clients.size() + 1);
                 clients.add(handler);
-                gameState.adicionarJogador(handler.getId()); // ✅ adiciona o jogador à memória compartilhada
+                gameState.adicionarJogador(handler.getId());
                 new Thread(handler).start();
                 System.out.println("Jogador " + clients.size() + " conectado!");
             }

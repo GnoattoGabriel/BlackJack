@@ -28,7 +28,6 @@ public class Carta {
         return peso + naipe;
     }
 
-    // ======== 🔹 CARTA ESTILIZADA COM CORES ========
 
     public static String formatCarta(Carta c) {
         boolean vermelho = c.naipe.equals("♥") || c.naipe.equals("♦");

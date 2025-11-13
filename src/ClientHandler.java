@@ -30,7 +30,6 @@ public class ClientHandler implements Runnable {
 
             send("BEM-VINDO Jogador " + id);
 
-            // Cada jogador recebe sua mão do GameState
             Mao mao = gameState.getMaoJogador(id);
             send("SUA MÃO INICIAL:\n" + mao.formatMao());
 
@@ -47,7 +46,6 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    // Envia mensagem ao cliente
     public void send(String msg) {
         try {
             out.write(msg + "\n");
