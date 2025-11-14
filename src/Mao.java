@@ -9,6 +9,10 @@ public class Mao {
         cartas.add(c);
     }
 
+    public synchronized void clear() {
+        cartas.clear();
+    }
+
     public int maiorPeso() {
         int total = 0;
         int As = 0;

@@ -62,6 +62,19 @@ public class Server {
         }
     }
 
+    private void reiniciarPartida() {
+        gameState.getDeck().reset();
+        gameState.getDealer().clear();
+
+        for (ClientHandler c : clients) {
+            gameState.getMaoJogador(c.getId()).clear();
+        }
+
+        ultimaJogada = null;
+        jogadorAtual = null;
+    }
+
+
     public void startGame() {
         gameState.iniciarPartida();
 
@@ -148,6 +161,32 @@ public class Server {
 
         transmissao("GAME_OVER");
         gameState.encerrarPartida();
+
+
+
+        transmissao("Deseja jogar novamente? (SIM/NAO)");
+        Map<ClientHandler, String> respostas = new HashMap<>();
+
+        for (ClientHandler player : clients) {
+            jogadorAtual = player;
+            esperarJogada();
+            respostas.put(player, ultimaJogada);
+        }
+
+        boolean todosQuerem = respostas.values()
+                .stream()
+                .allMatch(r -> r.equalsIgnoreCase("SIM"));
+
+        if (todosQuerem) {
+            transmissao("Reiniciando partida...");
+            reiniciarPartida();
+            startGame();
+        } else {
+            transmissao("Encerrando jogo. Obrigado por jogar!");
+            for (ClientHandler c : clients) {
+                c.encerrar();
+            }
+        }
     }
 
     private String calcularResultado(Mao player, Mao dealer) {
